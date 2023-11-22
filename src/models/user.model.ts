@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Query, Schema, model } from 'mongoose'
 import { IUser } from '../interfaces/user.interface'
 
 const userSchema = new Schema<IUser>({
@@ -36,6 +36,13 @@ const userSchema = new Schema<IUser>({
     },
     default: 'active',
   },
+})
+
+// for filter with active user
+// c4-> part-6 -> 35:00
+userSchema.pre(/^find/, function (this: Query<IUser, Document>, next) {
+  this.find({ userStatus: { $eq: 'active' } })
+  next()
 })
 
 const User = model<IUser>('user', userSchema)
