@@ -85,10 +85,38 @@ Relation of database:
   // Relationship -> Only for Mongo DB
     a. One to few => embeding/referencing
     => User : [order1,order2,order3, ....< 50] -> ekjon user er onek beshi order hobe na 
-    b. One to many => Referencing
+    b. One to many => Referencing -> :child/parent => kom write/read hole child referencing => beshi beshi write/read hole parent 
     => user:[comment1,comment2........1000000] -> actual many but have limitation
-    c. one to tens => referencing :child/parent => kom write/read hole child referencing => beshi beshi write/read hole parent 
+    c. one to tens => Referencing -> parent
     => User:chat['Hi','Hellow',10000000000000000000] // lot's of chat
-3. Many to many
+3. Many to many => 2 way referencing
 => ekta user onke gula tour dite pate : same tour onek gula user er hote pare
 
+
+// Chosseing reference/emmbade
+
+Tour:{
+    location:[ => Embadding
+        {
+            area:'ST. Martin'
+        },
+        {
+            area:'Dhaka'
+        }
+    ]
+}
+
+Booking:{ => parent referencing
+    id:1,
+    userId:1
+}
+
+User:{
+    // temon referencing nai
+}
+
+Review:{ => parent referencing
+    id:1,
+    tourId:1,
+    useId,
+}
