@@ -1,0 +1,94 @@
+Entities :
+1.User
+2.Tour
+3.Location
+4.Review
+5.Booking
+
+Collections :
+1.User
+{
+    id:1
+    name:'Shahin',
+    email:'sa@gmail.com'
+    review:[
+        {
+            review:'good',
+            rating:4.5
+        },
+        {
+            review:'good',
+            rating:4.5
+        }
+    ],
+    // Referencing -> chiled Referencing
+    booking:[
+        id:1
+        id:1,
+        id:1,
+    ]
+}
+
+2.Tour
+{
+    // Embading
+    Locations:[
+        {
+            area:'ST. Martin'
+        }
+    ]
+}
+
+Booking :
+{
+    id:1,
+    tourName:'Dhaka - cox'
+    useId:1 // Referencing -> Parent Referencing
+}
+
+Embedding vs Referencing :
+
+Referencing :
+
+2 way Referencing -> modified child referencing 
+
+Movie:
+{
+    id:1,
+    name:'Loki',
+    actores:[
+        objectId('fdf')
+        objectId('fdf')
+        objectId('fdf')
+    ]
+}
+
+Actor:
+// BSON Document => max limit -> 16 MB
+{
+    id:1,
+    name:'Test',
+    movies:[
+        objectId('kdf)
+        objectId('kdf)
+        objectId('kdf)
+    ]
+}
+
+
+Relation of database:
+1. One to One  => profile -> embeding : referncing- data onek boro hole
+=> 1 tour er jonno -> 1 bar review
+=> 1 jon user : Profile ekta e hobe
+2. One to Many / Many to One
+=> 1 jon user multiple tour dite pare
+  // Relationship -> Only for Mongo DB
+    a. One to few => embeding/referencing
+    => User : [order1,order2,order3, ....< 50] -> ekjon user er onek beshi order hobe na 
+    b. One to many => Referencing
+    => user:[comment1,comment2........1000000] -> actual many but have limitation
+    c. one to tens => referencing :child/parent => kom write/read hole child referencing => beshi beshi write/read hole parent 
+    => User:chat['Hi','Hellow',10000000000000000000] // lot's of chat
+3. Many to many
+=> ekta user onke gula tour dite pate : same tour onek gula user er hote pare
+
