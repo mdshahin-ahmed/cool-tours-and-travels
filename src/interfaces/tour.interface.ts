@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-types */
+import { Model } from 'mongoose'
+
 interface ITour {
   name: string
   duration: number
@@ -17,4 +20,13 @@ interface ITour {
 // slug: awesome-cox's-bazar-tour
 // tour/awesome-cox's-bazar-tour
 
-export { ITour }
+interface ITourMethods {
+  getNextNearestStartDateAndEndDate(): {
+    nearestStartDate: Date | null
+    estimatedEndDate: Date | null
+  }
+}
+
+type TTourModel = Model<ITour, {}, ITourMethods>
+
+export { ITour, ITourMethods, TTourModel }

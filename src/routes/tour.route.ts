@@ -9,5 +9,6 @@ router.post('/create-tour', tourController.createTour)
 router.get('/:id', tourController.getSingleTour)
 router.patch('/:id', tourController.updateTour)
 router.delete('/:id', tourController.deleteTour)
+router.get('/:id/next-schedule', tourController.getNextSchedule)
 
 export const tourRoutes = router

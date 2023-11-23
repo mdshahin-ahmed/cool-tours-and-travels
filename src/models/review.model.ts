@@ -2,31 +2,45 @@ import { Schema, model } from 'mongoose'
 
 import { IReview } from '../interfaces/review.interface'
 
-const reviewSchema = new Schema<IReview>({
-  review: {
-    type: String,
-    required: [true, 'Please provide a review'],
+const reviewSchema = new Schema<IReview>(
+  {
+    review: {
+      type: String,
+      required: [true, 'Please provide a review'],
+    },
+    rating: {
+      type: Number,
+      required: [true, 'Please provide a rating'],
+      min: 1,
+      max: 5,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now(),
+    },
+    tour: {
+      type: Schema.Types.ObjectId,
+      ref: 'tours',
+      required: [true, 'Please provide the associated tour'],
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+      required: [true, 'Please provide the associated user'],
+    },
   },
-  rating: {
-    type: Number,
-    required: [true, 'Please provide a rating'],
-    min: 1,
-    max: 5,
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   },
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
-  tour: {
-    type: Schema.Types.ObjectId,
-    ref: 'tours', // Assuming your tour model is named 'Tour'
-    required: [true, 'Please provide the associated tour'],
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'users', // Assuming your user model is named 'User'
-    required: [true, 'Please provide the associated user'],
-  },
+)
+
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true })
+
+reviewSchema.virtual('users', {
+  ref: 'user',
+  foreignField: '_id',
+  localField: 'user',
 })
 
 const Review = model<IReview>('review', reviewSchema)
