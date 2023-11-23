@@ -1,8 +1,9 @@
 import { Schema, model } from 'mongoose'
 
-import { IReview } from '../interfaces/review.interface'
+import { IReview, IReviewModal } from '../interfaces/review.interface'
+import Tour from './tour.model'
 
-const reviewSchema = new Schema<IReview>(
+const reviewSchema = new Schema<IReview, IReviewModal>(
   {
     review: {
       type: String,
@@ -43,6 +44,36 @@ reviewSchema.virtual('users', {
   localField: 'user',
 })
 
-const Review = model<IReview>('review', reviewSchema)
+reviewSchema.statics.calcAverageRatings = async function (
+  tourId: Schema.Types.ObjectId,
+) {
+  const stats = await this.aggregate([
+    // state - 1
+    {
+      $match: { tour: tourId },
+    },
+    // state - 2
+    {
+      $group: {
+        _id: '$tour',
+        numberOfRatings: { $sum: 1 },
+        avgRating: { $avg: '$rating' },
+      },
+    },
+  ])
+  if (stats.length > 0) {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingQuantity: stats[0].numberOfRatings,
+      ratingAverage: stats[0].avgRating,
+    })
+  } else {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingAverage: 0,
+      ratingQuantity: 0,
+    })
+  }
+}
+
+const Review = model<IReview, IReviewModal>('review', reviewSchema)
 
 export default Review
