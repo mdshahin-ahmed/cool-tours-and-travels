@@ -1,7 +1,7 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { TourServices } from '../services/tour.service'
 
-const getAllTours = async (req: Request, res: Response) => {
+const getAllTours = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await TourServices.getAllTours()
     res.status(200).json({
@@ -11,10 +11,11 @@ const getAllTours = async (req: Request, res: Response) => {
     })
   } catch (error: any) {
     console.log(error)
-    res.status(500).json({
-      status: 'fail',
-      message: error.message || 'Something went wrong',
-    })
+    next(error)
+    // res.status(500).json({
+    //   status: 'fail',
+    //   message: error.message || 'Something went wrong',
+    // })
   }
 }
 const getSingleTour = async (req: Request, res: Response) => {
