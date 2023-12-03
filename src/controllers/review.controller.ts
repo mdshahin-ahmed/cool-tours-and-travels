@@ -1,30 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { ReviewServices } from '../services/review.service'
+import catchAsyncFunction from '../utils/catchAsync'
 import sendSuccessResponse from '../utils/sendSuccessResponse'
 
-const getAllReviews = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+const getAllReviews = catchAsyncFunction(
+  async (req: Request, res: Response) => {
     const result = await ReviewServices.getAllReviews()
     sendSuccessResponse(res, {
       statusCode: 200,
       message: 'Successfully fetched reviews',
       data: result,
     })
-  } catch (error: any) {
-    next(error)
-  }
-}
-const getSingleReview = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+  },
+)
+
+const getSingleReview = catchAsyncFunction(
+  async (req: Request, res: Response) => {
     const { id } = req.params
 
     const result = await ReviewServices.getSingleReview(id)
@@ -33,67 +25,41 @@ const getSingleReview = async (
       message: 'Successfully fetched review',
       data: result,
     })
-  } catch (error: any) {
-    next(error)
-  }
-}
+  },
+)
 
-const createReview = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const reviewData = req.body
-    const result = await ReviewServices.createReview(reviewData)
-    sendSuccessResponse(res, {
-      statusCode: 200,
-      message: 'Successfully added review',
-      data: result,
-    })
-  } catch (error: any) {
-    next(error)
-  }
-}
+const createReview = catchAsyncFunction(async (req: Request, res: Response) => {
+  const reviewData = req.body
+  const result = await ReviewServices.createReview(reviewData)
+  sendSuccessResponse(res, {
+    statusCode: 200,
+    message: 'Successfully added review',
+    data: result,
+  })
+})
 
-const updateReview = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const reviewData = req.body
-    const { id } = req.params
-    const result = await ReviewServices.updateReview(id, reviewData)
+const updateReview = catchAsyncFunction(async (req: Request, res: Response) => {
+  const reviewData = req.body
+  const { id } = req.params
+  const result = await ReviewServices.updateReview(id, reviewData)
 
-    sendSuccessResponse(res, {
-      statusCode: 200,
-      message: 'Successfully updated review',
-      data: result,
-    })
-  } catch (error: any) {
-    next(error)
-  }
-}
+  sendSuccessResponse(res, {
+    statusCode: 200,
+    message: 'Successfully updated review',
+    data: result,
+  })
+})
 
-const deleteReview = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { id } = req.params
-    await ReviewServices.deleteReview(id)
+const deleteReview = catchAsyncFunction(async (req: Request, res: Response) => {
+  const { id } = req.params
+  await ReviewServices.deleteReview(id)
 
-    sendSuccessResponse(res, {
-      statusCode: 200,
-      message: 'Successfully deleted review',
-      data: null,
-    })
-  } catch (error: any) {
-    next(error)
-  }
-}
+  sendSuccessResponse(res, {
+    statusCode: 200,
+    message: 'Successfully deleted review',
+    data: null,
+  })
+})
 
 export const reviewController = {
   createReview,
