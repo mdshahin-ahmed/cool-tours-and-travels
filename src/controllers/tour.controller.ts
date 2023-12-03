@@ -1,113 +1,98 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from 'express'
 import { TourServices } from '../services/tour.service'
+import sendSuccessResponse from '../utils/sendSuccessResponse'
 
 const getAllTours = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await TourServices.getAllTours()
-    res.status(200).json({
-      status: 'success',
+    sendSuccessResponse(res, {
+      statusCode: 200,
       message: 'Successfully fetched tours',
       data: result,
     })
   } catch (error: any) {
-    console.log(error)
     next(error)
-    // res.status(500).json({
-    //   status: 'fail',
-    //   message: error.message || 'Something went wrong',
-    // })
   }
 }
-const getSingleTour = async (req: Request, res: Response) => {
+const getSingleTour = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { id } = req.params
-    console.log('id', id)
 
     const result = await TourServices.getSingleTour(id)
-    res.status(200).json({
-      status: 'success',
+    sendSuccessResponse(res, {
+      statusCode: 200,
       message: 'Successfully fetched tour',
       data: result,
     })
   } catch (error: any) {
-    console.log(error)
-    res.status(500).json({
-      status: 'fail',
-      message: error.message || 'Something went wrong',
-    })
+    next(error)
   }
 }
 
-const createTour = async (req: Request, res: Response) => {
+const createTour = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const tourData = req.body
     const result = await TourServices.createTour(tourData)
-    res.status(201).json({
-      status: 'success',
+
+    sendSuccessResponse(res, {
+      statusCode: 200,
       message: 'Successfully added tour',
       data: result,
     })
   } catch (error: any) {
-    console.log(error)
-    res.status(500).json({
-      status: 'fail',
-      message: error.message || 'Something went wrong',
-    })
+    next(error)
   }
 }
 
-const updateTour = async (req: Request, res: Response) => {
+const updateTour = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const tourData = req.body
     const { id } = req.params
     const result = await TourServices.updateTour(id, tourData)
-    res.status(200).json({
-      status: 'success',
+
+    sendSuccessResponse(res, {
+      statusCode: 200,
       message: 'Successfully updated tour',
       data: result,
     })
   } catch (error: any) {
-    console.log(error)
-    res.status(500).json({
-      status: 'fail',
-      message: error.message || 'Something went wrong',
-    })
+    next(error)
   }
 }
 
-const deleteTour = async (req: Request, res: Response) => {
+const deleteTour = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params
     await TourServices.deleteTour(id)
-    res.status(200).json({
-      status: 'success',
+    sendSuccessResponse(res, {
+      statusCode: 200,
       message: 'Successfully deleted tour',
+      data: null,
     })
   } catch (error: any) {
-    console.log(error)
-    res.status(500).json({
-      status: 'fail',
-      message: error.message || 'Something went wrong',
-    })
+    next(error)
   }
 }
-const getNextSchedule = async (req: Request, res: Response) => {
+const getNextSchedule = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { id } = req.params
-    console.log(id)
-
     const result = await TourServices.getNextSchedule(id)
-    res.status(200).json({
-      status: 'success',
+    sendSuccessResponse(res, {
+      statusCode: 200,
       message: 'Nearest schedule fetched successfully',
       data: result,
     })
   } catch (error: any) {
-    console.log(error)
-    res.status(500).json({
-      status: 'fail',
-      message: error.message || 'Something went wrong',
-    })
+    next(error)
   }
 }
 
