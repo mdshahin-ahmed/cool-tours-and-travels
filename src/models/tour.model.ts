@@ -24,6 +24,10 @@ const tourSchema = new Schema<ITour, TTourModel, ITourMethods>(
       type: Number,
       required: [true, 'Please provide the tour price'],
     },
+    availableSeats: {
+      type: Number,
+      required: [true, 'available Seats is required'],
+    },
     imageCover: {
       type: String,
       required: [true, 'Please provide the tour cover image'],
