@@ -124,3 +124,6 @@ Review:{ => parent referencing
 Express App
 Database - mongodb
 
+1. Field validation
+2. Indexing -> Unique or not -> Duplicate check
+3. DataType validation
