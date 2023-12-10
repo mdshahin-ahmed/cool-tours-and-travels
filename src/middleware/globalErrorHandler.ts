@@ -24,11 +24,11 @@ const globalErrorHandler = (
 
   if (err instanceof mongoose.Error.ValidationError) {
     errorResponse.statusCode = 400
-    errorResponse.message = err.message
+    errorResponse.message = 'Validation Error!'
     errorResponse.status = 'error'
 
     const errorValues = Object.values(err.errors)
-    errorValues.map((errObj) => {
+    errorValues.forEach((errObj) => {
       errorResponse.issues.push({
         path: errObj.path,
         message: errObj.message,
