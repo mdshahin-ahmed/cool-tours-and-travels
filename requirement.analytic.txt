@@ -118,5 +118,9 @@ User:{
 Review:{ => parent referencing
     id:1,
     tourId:1,
-    useId,
+    useId:1,
 }
+
+Express App
+Database - mongodb
+
