@@ -5,6 +5,8 @@ import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 import { TErrorResponse } from '../types/TErrorResponse'
 import handleValidationError from '../helpers/errorHelpers/handleValidationError'
+import handleDuplicateError from '../helpers/errorHelpers/handleDuplicate'
+import handleCastError from '../helpers/errorHelpers/handleCastError'
 
 const globalErrorHandler = (
   err: any,
@@ -25,31 +27,10 @@ const globalErrorHandler = (
 
   if (err instanceof mongoose.Error.ValidationError) {
     errorResponse = handleValidationError(err)
-    // errorResponse.statusCode = 400
-    // errorResponse.message = 'Validation Error!'
-    // errorResponse.status = 'error'
-
-    // const errorValues = Object.values(err.errors)
-    // errorValues.forEach((errObj) => {
-    //   errorResponse.issues.push({
-    //     path: errObj.path,
-    //     message: errObj.message,
-    //   })
-    // })
   } else if (err.code && err.code === 11000) {
-    errorResponse.statusCode = 409
-    errorResponse.message = 'Duplicate Error!'
-    errorResponse.status = 'error'
-
-    const errorValues = Object.values(err.errors)
-    errorValues.forEach((errObj) => {
-      errorResponse.issues = [
-        {
-          path: '',
-          message: 'Value is duplicate',
-        },
-      ]
-    })
+    errorResponse = handleDuplicateError(err)
+  } else if (err instanceof mongoose.Error.CastError) {
+    handleCastError(err)
   }
 
   res.status(errorResponse.statusCode).json({
