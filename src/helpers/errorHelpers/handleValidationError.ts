@@ -1,19 +1,23 @@
-// import { TErrorResponse } from '../../types/TErrorResponse'
+import mongoose from 'mongoose'
+import { TErrorIssue, TErrorResponse } from '../../types/TErrorResponse'
 
-// const handleValidationError = (err) => {
-//   let errorResponse: TErrorResponse
+const handleValidationError = (
+  err: mongoose.Error.ValidationError,
+): TErrorResponse => {
+  const errorValues = Object.values(err.errors)
 
-//   errorResponse.statusCode = 400
-//   errorResponse.message = 'Validation Error!'
-//   errorResponse.status = 'error'
+  const issues: TErrorIssue[] = []
 
-//   const errorValues = Object.values(err.errors)
-//   errorValues.forEach((errObj) => {
-//     errorResponse.issues.push({
-//       path: errObj.path,
-//       message: errObj.message,
-//     })
-//   })
-// }
+  errorValues.forEach((errObj) => {
+    issues.push({ path: errObj.path, message: errObj.message })
+  })
 
-// // part 3 23m
+  return {
+    statusCode: 400,
+    status: 'fail',
+    message: 'Validation Error',
+    issues,
+  }
+}
+
+export default handleValidationError

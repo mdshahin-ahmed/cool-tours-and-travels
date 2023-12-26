@@ -4,6 +4,7 @@
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 import { TErrorResponse } from '../types/TErrorResponse'
+import handleValidationError from '../helpers/errorHelpers/handleValidationError'
 
 const globalErrorHandler = (
   err: any,
@@ -15,7 +16,7 @@ const globalErrorHandler = (
   // let message = err.message || 'Something went wrong'
   // let status = err.status || 'error'
 
-  const errorResponse: TErrorResponse = {
+  let errorResponse: TErrorResponse = {
     statusCode: err.statusCode || 500,
     status: err.status || 'error',
     message: err.message || 'Something went wrong',
@@ -23,17 +24,18 @@ const globalErrorHandler = (
   }
 
   if (err instanceof mongoose.Error.ValidationError) {
-    errorResponse.statusCode = 400
-    errorResponse.message = 'Validation Error!'
-    errorResponse.status = 'error'
+    errorResponse = handleValidationError(err)
+    // errorResponse.statusCode = 400
+    // errorResponse.message = 'Validation Error!'
+    // errorResponse.status = 'error'
 
-    const errorValues = Object.values(err.errors)
-    errorValues.forEach((errObj) => {
-      errorResponse.issues.push({
-        path: errObj.path,
-        message: errObj.message,
-      })
-    })
+    // const errorValues = Object.values(err.errors)
+    // errorValues.forEach((errObj) => {
+    //   errorResponse.issues.push({
+    //     path: errObj.path,
+    //     message: errObj.message,
+    //   })
+    // })
   }
 
   res.status(errorResponse.statusCode).json({
