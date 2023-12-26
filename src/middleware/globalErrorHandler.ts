@@ -36,6 +36,20 @@ const globalErrorHandler = (
     //     message: errObj.message,
     //   })
     // })
+  } else if (err.code && err.code === 11000) {
+    errorResponse.statusCode = 409
+    errorResponse.message = 'Duplicate Error!'
+    errorResponse.status = 'error'
+
+    const errorValues = Object.values(err.errors)
+    errorValues.forEach((errObj) => {
+      errorResponse.issues = [
+        {
+          path: '',
+          message: 'Value is duplicate',
+        },
+      ]
+    })
   }
 
   res.status(errorResponse.statusCode).json({
