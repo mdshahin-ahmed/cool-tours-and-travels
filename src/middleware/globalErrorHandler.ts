@@ -7,6 +7,7 @@ import { TErrorResponse } from '../types/TErrorResponse'
 import handleValidationError from '../helpers/errorHelpers/handleValidationError'
 import handleDuplicateError from '../helpers/errorHelpers/handleDuplicate'
 import handleCastError from '../helpers/errorHelpers/handleCastError'
+import handleGenericError from '../helpers/errorHelpers/handleGenericError'
 
 const globalErrorHandler = (
   err: any,
@@ -31,6 +32,8 @@ const globalErrorHandler = (
     errorResponse = handleDuplicateError(err)
   } else if (err instanceof mongoose.Error.CastError) {
     handleCastError(err)
+  } else if (err instanceof Error) {
+    errorResponse = handleGenericError(err)
   }
 
   res.status(errorResponse.statusCode).json({
